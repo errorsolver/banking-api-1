@@ -1,0 +1,37 @@
+# Logs
+logs/
+*.log
+
+# Dependencies
+node_modules/
+
+# Built output
+dist/
+build/
+
+# Environment variables
+.env
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Editor/IDE specific files
+.vscode/
+.idea/
+
+# Testing
+coverage/
+
+# Dependency lock files
+package-lock.json
+yarn.lock
+
+# Config files
+.nycrc
+.babelrc
+.eslintrc
+.prettierrc
+
+# Ignore compiled JavaScript files if applicable
+*.js

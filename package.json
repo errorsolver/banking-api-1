@@ -1,0 +1,11 @@
+{
+  "name": "banking_1",
+  "version": "1.0.0",
+  "description": "banking api",
+  "main": "index.js",
+  "scripts": {
+    "test": "nodemon index.js"
+  },
+  "author": "errorsolver",
+  "license": "ISC"
+}
