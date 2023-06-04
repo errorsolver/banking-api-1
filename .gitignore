@@ -12,10 +12,6 @@ build/
 # Environment variables
 .env
 
-# OS generated files
-.DS_Store
-Thumbs.db
-
 # Editor/IDE specific files
 .vscode/
 .idea/
@@ -32,6 +28,3 @@ yarn.lock
 .babelrc
 .eslintrc
 .prettierrc
-
-# Ignore compiled JavaScript files if applicable
-*.js
