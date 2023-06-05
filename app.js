@@ -13,12 +13,20 @@ app.use(cors())
 app.use(express.json())
 app.use(cookieParser())
 
+app.use(express.static('public'))
+app.use('/css', express.static(__dirname + '/css'))
+app.use('/js', express.static(__dirname + '/js'))
+app.use('/img', express.static(__dirname + '/img'))
+
 app.use('/user', usersRoutes)
-app.use('/transfer', transferRoutes)
+app.use('/transaction', transferRoutes)
+
+app.set('views', './views');
+app.set('view engine', 'ejs')
 
 app.get('/', (req, res) => {
     res.status(200).json({
-        message: 'Wellcome'
+        message: 'Welcome'
     })
 })
 

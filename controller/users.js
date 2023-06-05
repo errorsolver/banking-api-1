@@ -6,16 +6,17 @@ const usersController = {}
 
 const errorHandler = async (res, err, customText) => {
     let eMsg, eCode
-    try {
-        eMsg = err.errors[0].message
-    } catch (err) {
-        console.log(err);
-    }
-    try {
-        eCode = err.original.code
-    } catch (err) {
-        console.log(err);
-    }
+
+    // try {
+    //     eMsg = err.errors[0].message
+    // } catch (err) {
+    //     console.log(err);
+    // }
+    // try {
+    //     eCode = err.original.code
+    // } catch (err) {
+    //     console.log(err);
+    // }
 
     if (eCode == 23505) {
         eMsg = 'user already exist'
@@ -32,6 +33,17 @@ const errorHandler = async (res, err, customText) => {
     })
 }
 
+const handlerErrors = (err) => {
+    let errors = { email: '', password: '' }
+
+    // if(err.message.includes('user validation failed')) {
+    //     Object.values(err.errors).forEach( ({properties}) => {
+    //         errors[properties.path] = properties.message
+    //     })
+    // }
+    return err
+}
+
 function createToken(id) {
     const passcode = process.env.PASSCODE
 
@@ -39,22 +51,13 @@ function createToken(id) {
     return token
 }
 
-async function login(res, username, password) {
-    try {
-        const login = await Users.findOne({ where: { username, password } })
-        if (login === null) { throw 'user not found' }
-
-        const token = createToken(login.id)
-        const age = 3 * 12 * 60 * 60 * 1000
-
-        res.cookie('_jwt', token, {
-            httpOnly: true,
-            maxAge: age
-        })
-    } catch (err) {
-        console.log('login error: ', err)
-    }
-}
+// async function login(username, password) {
+//     const login = await Users.findOne({ where: { username, password } })
+//     if (login) {
+//         return createToken(login.id)
+//     }
+//     throw 'user not found'
+// }
 
 usersController.signup_post = async (req, res) => {
     const { username, password } = req.body
@@ -84,15 +87,29 @@ usersController.login_post = async (req, res) => {
         if (!username) throw 'username required'
         if (!password) throw 'password required'
 
-        await login(res, username, password)
+        // const token = await login(username, password)
+        const login = await Users.findOne({ where: { username, password } })
+        if (login) {
+            const token = createToken(login.id)
+            
+            const age = 3 * 12 * 60 * 60 * 1000
+            await res.cookie('_jwt', token, {
+                httpOnly: true,
+                maxAge: age
+            })
+        }
 
         res.status(200).json({
             message: 'login success',
-            detail: token,
-            token: req.cookies._jwt
+            user: login.id
         })
     } catch (err) {
-        errorHandler(res, err, 'failed to login')
+        // errorHandler(res, err, 'failed to login')
+        // const errors = handlerErrors(err)
+        res.status(400).json({
+            "message": "fail",
+            "errors": err
+        })
     }
 }
 
