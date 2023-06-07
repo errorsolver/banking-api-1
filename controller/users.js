@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken')
 
 const Users = require("../config/model/users")
+const { Op } = require('sequelize')
 
 const usersController = {}
 
@@ -58,6 +59,51 @@ function createToken(id) {
 //     }
 //     throw 'user not found'
 // }
+
+function decodeToken(token) {
+    const decodedToken = jwt.decode(token)
+    return decodedToken
+}
+
+usersController.getAllExcept = async (req, res) => {
+    const token = req.cookies._jwt
+    const decodedToken = decodeToken(token)
+    console.log('decodedToken: ',decodedToken);
+    try {
+        const users = await Users.findAll({
+            where: {
+                id: {
+                    [Op.ne]: decodedToken.id
+                }
+            },
+            order: [['username', 'ASC']]
+        })
+
+        compactData = []
+        users.forEach( u => {
+            const userData = {
+                id: u.dataValues.id,
+                username: u.dataValues.username,
+            }
+            compactData.push(userData)
+        })
+        // const jsonString = JSON.stringify(compactData)
+
+        res.status(200).json({
+            message: 'Success get users',
+            users: compactData,
+            // users: jsonString
+        })
+    } catch (err) {
+        console.log('err: ',err);
+        const errors = handlerErrors(err)
+        res.status(400).json({
+            errors
+        })
+    }
+
+    
+}
 
 usersController.signup_post = async (req, res) => {
     const { username, password } = req.body

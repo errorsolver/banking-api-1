@@ -1,5 +1,66 @@
 <%- include('../../partials/header.ejs') %>
 
 <body>
-    <h1>Transaction</h1>
+  <div
+  class="
+    container
+    row
+    m-auto
+    grid gap-3
+  ">
+    <div
+    class="
+        col
+        mt-3
+        g-col-6
+        px-2 py-3
+        border rounded-4
+    ">
+      <h1 class="text-center">Log</h1>
+      <div class="table-responsive">
+        <table class="table">
+          <tr>
+            <thead class="table-light table align-middle">
+              <tr>
+                <th class="col-md-1">#</th>
+                <th class="col-md-3">Receiver</th>
+                <th class="col-md-3">Amount</th>
+                <th class="col-md-5">Transaction Date</th>
+              </tr>
+            </thead>
+            <tbody class="
+            overflow-scroll
+            "></tbody>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="
+    sticky-top
+    col
+    g-col-6
+    h-100
+    px-5 rounded-bottom-4
+    border-end border-start border-bottom
+    ">
+      <form name="transaction-send">
+        <h1 class="text-center">Transaction</h1>
+        <div class="row">
+          <label for="receiver">Receiver</label>
+          <select class="form-control" name="receiver" id="receiver" autofocus required>
+            <option value="">Choose Person</option>
+          </select>
+        </div>
+        <div class="row">
+          <label for="amount">Amount</label>
+          <input class="form-control" type="number" id="amount" min="1" required>
+        </div>
+        <div class="row mt-2 padding_0">
+          <button class="btn" type="submit">Send</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script src="/js/transaction-send.js"></script>
 </body>

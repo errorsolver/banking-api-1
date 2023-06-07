@@ -4,6 +4,8 @@ const controller = require('../controller/c_index')
 
 const usersRoutes = express.Router()
 
+usersRoutes.get('/getUsersEx', controller.usersController.getAllExcept)
+
 usersRoutes.get('/signup', (req, res) => {res.render('pages/signup/signup')})
 usersRoutes.post('/signup', controller.usersController.signup_post)
 

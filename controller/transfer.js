@@ -6,16 +6,61 @@ const Transfer = require('../config/model/transfer')
 
 const transferController = {}
 
-const passcode = process.env.PASSCODE
 function getUserId(token) {
     const decodedToken = jwt.decode(token)
     return decodedToken.id
 }
 
+transferController.getLogsById = async (req, res) => {
+    const token = req.cookies._jwt
+
+    try {
+        const logs = await Transfer.findAll({
+            where: {
+                sender_id: getUserId(token)
+            },
+            include: Users,
+            attributes: [
+                'amount', 'createdAt'
+            ]
+        })
+
+        res.status(200).json({
+            message: 'success get logs data',
+            data: logs
+        })
+    } catch (error) {
+        res.status(400).json({
+            error
+        })
+    }
+}
+
+transferController.getById = async (req, res) => {
+    try {
+        const { senderId, amount } = req.body
+        const transaferData = Transfer.findAll({
+            where: {
+                sender_id: senderId
+            }
+        })
+
+        res.status(200).json({
+            message: 'Success get transfer data',
+            data: transaferData
+        })
+    } catch (err) {
+        res.status(400).json({
+            error: err
+        })
+    }
+}
+
 transferController.transfer_post = async (req, res) => {
     const { amount, receiverId } = req.body
-
     const token = req.cookies._jwt
+
+
     const senderId = getUserId(token)
     try {
         if (!amount) throw 'amount require'
